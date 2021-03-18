@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\FbxTextureRenderSample.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\GeometrySVShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\PixelSShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\GeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\PixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexShader_Live2D.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexSShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexSVShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

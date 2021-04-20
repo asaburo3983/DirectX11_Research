@@ -68,7 +68,7 @@ ID3D11Device* dev;
 
 
 
-bool FbxMeshFile::Load(const char* file_name, const char* VertexShaderFilePath, const char* GeometryShaderFilePath, const char* PixelShaderFilePath)
+bool FbxMeshFile::Load(const char* modelfile_name, const char* texfile_name, const char* VertexShaderFilePath, const char* GeometryShaderFilePath, const char* PixelShaderFilePath)
 {
 	
 	dev = DirectGraphics::GetInstance()->GetDevice();
@@ -76,7 +76,7 @@ bool FbxMeshFile::Load(const char* file_name, const char* VertexShaderFilePath, 
 	//シェーダのコンパイル
 	CreateShader(VertexShaderFilePath, GeometryShaderFilePath,PixelShaderFilePath);
 
-	if (LoadFbxFile(file_name) == false)//文字列リスト、フォルダ場所、全ファイルパスを送る　多分フォルダ場所はいらん
+	if (LoadFbxFile(modelfile_name,texfile_name) == false)//文字列リスト、フォルダ場所、全ファイルパスを送る　多分フォルダ場所はいらん
 	{
 		return false;
 	}
@@ -132,10 +132,12 @@ void FbxMeshFile::Render(Vector3 pos, Vector3 scale, Vector3 degree)
 }
 
 
-void FbxMeshFile::RenderS(DirectGraphics* graphics, Vector3 pos, Vector3 scale, Vector3 degree) {
+void FbxMeshFile::RenderS(Vector3 pos, Vector3 scale, Vector3 degree) {
 	UINT strides = sizeof(Vector3);
 	strides = sizeof(CustomVertex);
 	UINT offsets = 0;
+	DirectGraphics* graphics = DirectGraphics::GetInstance();
+
 	graphics->SetUpContextSM2(pos, scale, degree, m_VertexShader, m_GeometryShader, m_PixelShader);
 
 	graphics->GetContext()->IASetInputLayout(m_InputLayout);
@@ -159,13 +161,13 @@ void FbxMeshFile::RenderS(DirectGraphics* graphics, Vector3 pos, Vector3 scale, 
 		graphics->GetContext()->DrawIndexed(mesh.m_Indices.size(), 0, 0);
 	}
 }
-void FbxMeshFile::RenderS_SM(DirectGraphics* graphics, Vector3 pos, Vector3 scale, Vector3 degree, Vector3 lightPos, Vector3 lightFocus, Vector3 lightUp, float lightFov) {
+void FbxMeshFile::RenderS_SM(Vector3 pos, Vector3 scale, Vector3 degree) {
 	UINT strides = sizeof(Vector3);
 	strides = sizeof(CustomVertex);
 	UINT offsets = 0;
+	DirectGraphics* graphics = DirectGraphics::GetInstance();
 
-
-	graphics->SetUpContextSM(pos, scale, degree, m_VertexShader, lightPos, lightFocus, lightUp, lightFov);
+	graphics->SetUpContextSM(pos, scale, degree, m_VertexShader);
 
 	graphics->GetContext()->IASetInputLayout(m_InputLayout);
 
@@ -338,7 +340,7 @@ void FbxMeshFile::SetMaterialName(MeshData& mesh_data, FbxMesh* mesh)
 	}
 }
 
-bool FbxMeshFile::LoadTexture(FbxFileTexture* texture, std::string& keyword)
+bool FbxMeshFile::LoadTexture(FbxFileTexture* texture, std::string& keyword, const char* texfile_name)
 {
 	if (texture == nullptr)
 	{
@@ -359,23 +361,10 @@ bool FbxMeshFile::LoadTexture(FbxFileTexture* texture, std::string& keyword)
 	// 「/」で分解
 	Split('/', buffer, split_list);
 
-	std::string root_path = "Res/Texture/";
-
+	std::string root_path = texfile_name;
 
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
 	std::wstring wstr_file_name = cv.from_bytes(root_path + split_list[split_list.size() - 1]);
-
-	//std::vector<std::string> split_list;
-	//std::vector<std::string> split_list_test;
-	//std::string replace_file_name = buffer;
-	//// 「/」で分解
-	//Split('/', buffer, split_list);
-	//Split('.', (char*)split_list[split_list.size() - 1].c_str(), split_list_test);
-
-	//std::string file_name = "Res/Texture/" + split_list_test[split_list_test.size() - 2] + ".png";
-
-	//std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
-	//std::wstring wstr_file_name = cv.from_bytes(file_name);
 
 	// 文字化け対策
 	char* file_name;
@@ -392,24 +381,6 @@ bool FbxMeshFile::LoadTexture(FbxFileTexture* texture, std::string& keyword)
 	//	return true;
 	}
 
-	/*
-		D3DX11CreateShaderResourceViewFromFileの代わり
-		D3DXが削除されてしまったためにDirectXTexを使用する
-
-		http://directxtex.codeplex.com/ をダウンロードして
-		そのフォルダ内にあるWICTextureLoader.cppとWICTextureLoader.hをプロジェクトに追加する
-	*/
-	
-	//if(FAILED(DirectX::CreateDDSTextureFromFile(
-	//		DirectGraphics::GetInstance()->GetDevice(),			// ID3D11Device
-	//		wstr_file_name.c_str(),									// ファイル名(wchar_t型なので注意)
-	//		nullptr,											// 通常のテクスチャデータ
-	//		&m_Textures[file_name])))							// シェーダで使用することができるテクスチャデータ
-	//{
-	//	FbxFree(file_name);
-	//	return false;
-	//}
-
 	if (FAILED(DirectX::CreateWICTextureFromFile(
 		DirectGraphics::GetInstance()->GetDevice(),			// ID3D11Device
 		wstr_file_name.c_str(),									// ファイル名(wchar_t型なので注意)
@@ -425,7 +396,7 @@ bool FbxMeshFile::LoadTexture(FbxFileTexture* texture, std::string& keyword)
 	return true;
 }
 
-void FbxMeshFile::LoadMaterial(FbxSurfaceMaterial* material)
+void FbxMeshFile::LoadMaterial(FbxSurfaceMaterial* material,const char* texfile_name)
 {
 	ObjMaterial entry_material;
 	enum class MaterialOrder
@@ -510,7 +481,7 @@ void FbxMeshFile::LoadMaterial(FbxSurfaceMaterial* material)
 	}
 
 	if (texture != nullptr &&
-		LoadTexture(texture, keyword) == true)
+		LoadTexture(texture, keyword,texfile_name) == true)
 	{
 		// 読み込んだテクスチャとマテリアルの関係を覚えておく
 		m_MaterialLinks[material->GetName()] = m_Textures[keyword];
@@ -541,52 +512,55 @@ void FbxMeshFile::Animation(int _num, float speed) {
 	}
 
 
-	// 各頂点に掛けるための最終的な行列の配列
-	FbxMatrix* clusterDeformation = new FbxMatrix[fMesh->GetControlPointsCount()];
-	memset(clusterDeformation, 0, sizeof(FbxMatrix) * fMesh->GetControlPointsCount());
+	for (int count = 0; count < meshNum; count++) {
+		// 各頂点に掛けるための最終的な行列の配列
+		FbxMatrix* clusterDeformation = new FbxMatrix[fMesh[count]->GetControlPointsCount()];
+		memset(clusterDeformation, 0, sizeof(FbxMatrix) * fMesh[count]->GetControlPointsCount());
 
-	FbxSkin* skinDeformer = (FbxSkin*)fMesh->GetDeformer(0, FbxDeformer::eSkin);
-	int clusterCount = skinDeformer->GetClusterCount();
-	// 各クラスタから各頂点に影響を与えるための行列作成
-	FbxCluster* cluster;
-	FbxMatrix vertexTransformMatrix;
-	FbxAMatrix referenceGlobalInitPosition;
-	FbxAMatrix clusterGlobalInitPosition;
-	FbxMatrix clusterGlobalCurrentPosition;
-	FbxMatrix clusterRelativeInitPosition;
+		FbxSkin* skinDeformer = (FbxSkin*)fMesh[count]->GetDeformer(0, FbxDeformer::eSkin);
+		int clusterCount = skinDeformer->GetClusterCount();
+		// 各クラスタから各頂点に影響を与えるための行列作成
+		FbxCluster* cluster;
+		FbxMatrix vertexTransformMatrix;
+		FbxAMatrix referenceGlobalInitPosition;
+		FbxAMatrix clusterGlobalInitPosition;
+		FbxMatrix clusterGlobalCurrentPosition;
+		FbxMatrix clusterRelativeInitPosition;
 
-	//ここの計算は１度に計算して数値を持っておくことで対応できる ロード時間が長くなりメモリも食うがFPSは落ちない
-	for (int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++) {
-		// クラスタ(ボーン)の取り出し
-		cluster = skinDeformer->GetCluster(clusterIndex);//ボーンを取り出す
+		//ここの計算は１度に計算して数値を持っておくことで対応できる ロード時間が長くなりメモリも食うがFPSは落ちない
+		for (int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++) {
+			// クラスタ(ボーン)の取り出し
+			cluster = skinDeformer->GetCluster(clusterIndex);//ボーンを取り出す
 
-		cluster->GetTransformMatrix(referenceGlobalInitPosition);
-		cluster->GetTransformLinkMatrix(clusterGlobalInitPosition);
+			cluster->GetTransformMatrix(referenceGlobalInitPosition);
+			cluster->GetTransformLinkMatrix(clusterGlobalInitPosition);
 
-		clusterGlobalCurrentPosition = cluster->GetLink()->EvaluateGlobalTransform(timeCount[_num]);//10m
-		clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse() * referenceGlobalInitPosition;//3m
+			clusterGlobalCurrentPosition = cluster->GetLink()->EvaluateGlobalTransform(timeCount[_num]);//10m
+			clusterRelativeInitPosition = clusterGlobalInitPosition.Inverse() * referenceGlobalInitPosition;//3m
 
-		vertexTransformMatrix = clusterGlobalCurrentPosition * clusterRelativeInitPosition;
-		//行列の順番が悪いのでボーンがおかしな挙動をする
-		DirectX::XMMATRIX cb;
+			vertexTransformMatrix = clusterGlobalCurrentPosition * clusterRelativeInitPosition;
+			//行列の順番が悪いのでボーンがおかしな挙動をする
+			DirectX::XMMATRIX cb;
 
-		cb = DirectX::XMMATRIX(////x             y                           z                               w
-			vertexTransformMatrix[0][0], vertexTransformMatrix[0][1], vertexTransformMatrix[0][2], vertexTransformMatrix[0][3],
+			cb = DirectX::XMMATRIX(////x             y                           z                               w
+				vertexTransformMatrix[0][0], vertexTransformMatrix[0][1], vertexTransformMatrix[0][2], vertexTransformMatrix[0][3],
 
-			vertexTransformMatrix[1][0], vertexTransformMatrix[1][1], vertexTransformMatrix[1][2], vertexTransformMatrix[1][3],
+				vertexTransformMatrix[1][0], vertexTransformMatrix[1][1], vertexTransformMatrix[1][2], vertexTransformMatrix[1][3],
 
-			vertexTransformMatrix[2][0], vertexTransformMatrix[2][1], vertexTransformMatrix[2][2], vertexTransformMatrix[2][3],
+				vertexTransformMatrix[2][0], vertexTransformMatrix[2][1], vertexTransformMatrix[2][2], vertexTransformMatrix[2][3],
 
-			vertexTransformMatrix[3][0], vertexTransformMatrix[3][1], vertexTransformMatrix[3][2], vertexTransformMatrix[3][3] 
-		);
+				vertexTransformMatrix[3][0], vertexTransformMatrix[3][1], vertexTransformMatrix[3][2], vertexTransformMatrix[3][3]
+			);
 
-		//普通の演算ではない
-		//   wが１に正規化された頂点                =  クラスタ行列　＊　　頂点座標
-		//verticesCluster[i] = clusterDeformation[i].MultNormalize(fMesh->GetControlPointAt(i));
+			//普通の演算ではない
+			//   wが１に正規化された頂点                =  クラスタ行列　＊　　頂点座標
+			//verticesCluster[i] = clusterDeformation[i].MultNormalize(fMesh->GetControlPointAt(i));
 
-		//頂点シェーダに渡す変数に入れる
-		DirectGraphics::GetInstance()->GetConstantBufferData()->mBoneMatrix[clusterIndex] = cb; //XMMatrixTranspose(cb);
+			//頂点シェーダに渡す変数に入れる
+			DirectGraphics::GetInstance()->GetConstantBufferData()->mBoneMatrix[clusterIndex] = cb; //XMMatrixTranspose(cb);
 
+		}
+		delete[] clusterDeformation;
 	}
 	// ----- Animation -----
 	
@@ -595,9 +569,8 @@ void FbxMeshFile::Animation(int _num, float speed) {
 	if (timeCount[_num] > stop[_num])
 		timeCount[_num] = start[_num];
 
-	delete[] clusterDeformation;
+	
 
-	//XMStoreFloat4(&m_ConstantBufferData.CameraPos, eye);
 }
 
 //アニメーション読み込み LoadFbxFileの子
@@ -605,13 +578,16 @@ void FbxMeshFile::CreateAnimation(FbxScene* fbxScene) {
 
 	FbxArray<FbxString*> AnimStackNameArray;//文字列リスト
 	fbxScene->FillAnimStackNameArray(AnimStackNameArray);//アニメーションの初期設定
-	if (AnimStackNameArray.Size() > 0) {
-		start = new FbxTime[AnimStackNameArray.Size()];
-		stop = new FbxTime[AnimStackNameArray.Size()];
-		FrameTime = new FbxTime[AnimStackNameArray.Size()];
-		timeCount = new FbxTime[AnimStackNameArray.Size()];
+	if (AnimStackNameArray.Size() <= 0) {
+		return;
+	}
 
-		for (int i = 0; i < AnimStackNameArray.Size(); i++) {
+	start = new FbxTime[AnimStackNameArray.Size()];
+	stop = new FbxTime[AnimStackNameArray.Size()];
+	FrameTime = new FbxTime[AnimStackNameArray.Size()];
+	timeCount = new FbxTime[AnimStackNameArray.Size()];
+
+	for (int i = 0; i < AnimStackNameArray.Size(); i++) {
 
 
 			FbxTakeInfo* takeInfo = fbxScene->GetTakeInfo(*(AnimStackNameArray[i]));//アニメーションの情報を取り出す
@@ -620,14 +596,21 @@ void FbxMeshFile::CreateAnimation(FbxScene* fbxScene) {
 			FrameTime[i].SetTime(0, 0, 0, 1, 0, fbxScene->GetGlobalSettings().GetTimeMode());//進める時間を設定
 			timeCount[i] = start[i];
 		}
-		/////////////////////////////////////////////////////////////////////////////////
-		FbxSkin* skinDeformer = (FbxSkin*)fMesh->GetDeformer(0, FbxDeformer::eSkin);
-		int clusterCount = skinDeformer->GetClusterCount();
 
+
+	/////////////////////////////////////////////////////////////////////////////////
+
+	int count = 0;
+	for (int count = 0; count < meshNum; count++) {
+		//メッシュ数分処理をするべき？
+		FbxSkin* skinDeformer = (FbxSkin*)fMesh[count]->GetDeformer(0, FbxDeformer::eSkin);
+		int clusterCount = skinDeformer->GetClusterCount();
+		
 		FbxCluster* cluster;
-		double** weightOll = new double*[fMesh->GetControlPointsCount()];
-		int** indexOll = new int*[fMesh->GetControlPointsCount()];
-		for (int i = 0; i < fMesh->GetControlPointsCount(); i++) {
+		//配列生成
+		double** weightOll = new double* [fMesh[count]->GetControlPointsCount()];
+		int** indexOll = new int* [fMesh[count]->GetControlPointsCount()];
+		for (int i = 0; i < fMesh[count]->GetControlPointsCount(); i++) {
 			weightOll[i] = new double[4];
 			indexOll[i] = new int[4];
 			for (int h = 0; h < 4; h++) {
@@ -635,17 +618,13 @@ void FbxMeshFile::CreateAnimation(FbxScene* fbxScene) {
 				indexOll[i][h] = 39;
 			}
 		}
-
-
+		//クラスタとインデックス、ウェイト取り出し
 		for (int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++) {
 			// クラスタ(ボーン)の取り出し
 			cluster = skinDeformer->GetCluster(clusterIndex);//ボーンを取り出す
-
 			for (int i = 0; i < cluster->GetControlPointIndicesCount(); i++) {
 				int index = cluster->GetControlPointIndices()[i];//頂点のインデックス
-
 				//clusterIndexが対応する頂点番号＝index
-
 				double weight = cluster->GetControlPointWeights()[i];//頂点のウェイト
 				for (int h = 0; h < 4; h++) {
 					if (weightOll[index][h] <= 0) {
@@ -662,27 +641,24 @@ void FbxMeshFile::CreateAnimation(FbxScene* fbxScene) {
 				}
 			}
 		}
-		for (auto& mesh : m_MeshList)
-		{
-			int* indices = fMesh->GetPolygonVertices();//三角の数をゲット
-			int polygon_vertex_count = fMesh->GetPolygonVertexCount();//頂点の数をゲット
+
+
+		int* indices = fMesh[count]->GetPolygonVertices();//三角の数をゲット
+		int polygon_vertex_count = fMesh[count]->GetPolygonVertexCount();//頂点の数をゲット
 
 			//ウェイトを代入
-			for (int i = 0; i < polygon_vertex_count; i++)
-			{
-				// インデックスバッファから頂点番号を取得
-				int index = indices[i];
-				for (int h = 0; h < 4; h++) {
+		for (int i = 0; i < polygon_vertex_count; i++)
+		{
+			// インデックスバッファから頂点番号を取得
+			int index = indices[i];
+			for (int h = 0; h < 4; h++) {
 
-					mesh.m_Vertices[i].BoneWeight[h] = weightOll[index][h];
-					mesh.m_Vertices[i].BoneIndex[h] = indexOll[index][h]; //0~24のボーン番号  
-				}
-
+				m_MeshList[count].m_Vertices[i].BoneWeight[h] = weightOll[index][h];
+				m_MeshList[count].m_Vertices[i].BoneIndex[h] = indexOll[index][h]; //0~24のボーン番号  
 			}
-
 		}
 
-		for (int i = 0; i < fMesh->GetControlPointsCount(); i++) {
+		for (int i = 0; i < fMesh[count]->GetControlPointsCount(); i++) {
 			delete weightOll[i];
 			delete indexOll[i];
 		}
@@ -690,7 +666,7 @@ void FbxMeshFile::CreateAnimation(FbxScene* fbxScene) {
 		delete indexOll;
 	}
 }
-bool FbxMeshFile::LoadFbxFile(const char* file_name)
+bool FbxMeshFile::LoadFbxFile(const char* modelfile_name,const char* texfile_name)
 {
 	// FbxManager作成
 	FbxManager* fbx_manager = fbxsdk::FbxManager::Create();
@@ -717,12 +693,12 @@ bool FbxMeshFile::LoadFbxFile(const char* file_name)
 	}
 
 	// Fileを初期化
-	fbx_importer->Initialize(file_name);
+	fbx_importer->Initialize(modelfile_name);
 	// sceneにインポート
 	fbx_importer->Import(fbx_scene);
 
 	FbxGeometryConverter converter(fbx_manager);
-	// メッシュに使われているマテリアル単位でメッシュを分割する
+	// アニメーションが読み込めない原因？メッシュに使われているマテリアル単位でメッシュを分割する
 	converter.SplitMeshesPerMaterial(fbx_scene, true);
 	// ポリゴンを三角形にする
 	converter.Triangulate(fbx_scene, true);
@@ -732,7 +708,7 @@ bool FbxMeshFile::LoadFbxFile(const char* file_name)
 	//マテリアル読み込み
 	for (int i = 0; i < material_num; i++)
 	{
-		LoadMaterial(fbx_scene->GetSrcObject<FbxSurfaceMaterial>(i));
+		LoadMaterial(fbx_scene->GetSrcObject<FbxSurfaceMaterial>(i),texfile_name);
 	}
 
 	// FbxMeshの数を取得
@@ -755,12 +731,16 @@ bool FbxMeshFile::LoadFbxFile(const char* file_name)
 			int tex = texture->GetSrcObjectCount< FbxSurfaceMaterial>();
 		}
 	}
+	
 	//アニメーションの読み込み
+	for (int i = 0; i < mesh_num; i++)
+	{
+		fMesh[i] = fbx_scene->GetSrcObject<FbxMesh>(i);
+	}
+	meshNum = mesh_num;
 
-		fMesh = fbx_scene->GetSrcObject<FbxMesh>(0);
-
-		CreateAnimation(fbx_scene);
-		fbxSceneAnime = fbx_scene;
+	CreateAnimation(fbx_scene);
+	fbxSceneAnime = fbx_scene;
 
 	//fbx_importer->Destroy();
 	//fbx_scene->Destroy();

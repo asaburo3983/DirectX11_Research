@@ -185,7 +185,7 @@ public:
 	//影系統の設定
 
 
-	void SetUpContextSM(Vector3 pos, Vector3 scale, Vector3 degree, VertexShader* m_VertexShader, Vector3 lightPos, Vector3 lightFocus, Vector3 lightUp, float lightFov);
+	void SetUpContextSM(Vector3 pos, Vector3 scale, Vector3 degree, VertexShader* m_VertexShader);
 
 	void SetUpContextSM2(Vector3 pos, Vector3 scale, Vector3 degree, VertexShader* m_VertexShader, GeometryShader* m_GeometryShader, PixelShader* m_PixelShader);
 	void SetTextureSM(ID3D11ShaderResourceView* texture);
@@ -209,6 +209,12 @@ public:
 	ID3D11RasterizerState* g_pRasterizerStateSM;
 
 	ID3D11DepthStencilState* g_pDepthStencilStateSM;
+	
+
+	//ライトからの射影変換とビュー
+	DirectX::XMMATRIX matShadowMapView;
+	DirectX::XMMATRIX matShadowMapProj;
+
 private:
 	ID3D11SamplerState* m_SamplerStateSM;									//!< @brief Textureサンプラー
 

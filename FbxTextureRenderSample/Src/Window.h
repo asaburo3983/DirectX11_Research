@@ -9,7 +9,8 @@ class Window
 {
 public:
 	static const char *ClassName;	//!< ウィンドウクラス登録時のクラス名
-
+	char* dragDropFileName=nullptr;
+	void SetDragDropFileName();
 public:
 	/**
 	* @brief ウィンドウプロシージャ
@@ -66,4 +67,5 @@ private:
 	unsigned int m_Height;		//!< @brief 縦幅(クライアント領域)
 };
 
+char* GetDragDropFileName();
 #endif

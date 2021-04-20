@@ -120,7 +120,7 @@ public:
 	* @param[in] device デバイス
 	* @param[in] vertex_shader モデルと関連付けるVertexShader
 	*/
-	bool Load(const char* file_name, const char* VertexShaderFilePath, const char* GeometryShaderFilePath, const char* PixelShaderFilePath);
+	bool Load(const char* modelfile_name, const char* texfile_name, const char* VertexShaderFilePath, const char* GeometryShaderFilePath, const char* PixelShaderFilePath);
 
 	/**
 	* @brief モデル描画関数@n
@@ -156,7 +156,7 @@ private:
 	* @return 作成の成否 成功(true)
 	* @param[in] file_name ファイル名
 	*/
-	bool LoadFbxFile(const char* file_name);
+	bool LoadFbxFile(const char* modelfile_name,const char* texfile_name);
 
 	/**
 	* @brief VertexBuffer作成@n
@@ -202,9 +202,9 @@ private:
 		FbxTime* start;
 		FbxTime* stop;
 		int nowAnimeNum = -1;
-		FbxMesh* fMesh;
+		FbxMesh* fMesh[50];
 		FbxScene* fbxSceneAnime;
-
+		int meshNum = 0;
 		void Animation(int _num,float speed);
 	private:
 	void CreateAnimation(FbxScene* fbxScene);
@@ -243,9 +243,9 @@ private:
 	* @param[out] mesh_data バッファ保存用
 	* @param[in] mesh バッファ取得をするMeshデータ
 	*/
-	void LoadMaterial(FbxSurfaceMaterial* material);
+	void LoadMaterial(FbxSurfaceMaterial* material,const char* texfile_name);
 
-	bool LoadTexture(FbxFileTexture* material, std::string& keyword);
+	bool LoadTexture(FbxFileTexture* material, std::string& keyword, const char* texfile_name);
 
 	void SetMaterialName(MeshData& mesh_data, FbxMesh* mesh);
 	void SetMaterialColor(DirectGraphics* graphics, ObjMaterial& material);
@@ -261,8 +261,8 @@ public:
 	//void RenderSV(DirectGraphics* graphics);
 	//void RenderS(DirectGraphics* graphics);
 
-	void RenderS(DirectGraphics* graphics, Vector3 pos, Vector3 scale, Vector3 degree);
-	void RenderS_SM(DirectGraphics* graphics, Vector3 pos, Vector3 scale, Vector3 degree, Vector3 lightPos, Vector3 lightFocus, Vector3 lightUp, float lightFov);
+	void RenderS(Vector3 pos, Vector3 scale, Vector3 degree);
+	void RenderS_SM(Vector3 pos, Vector3 scale, Vector3 degree);
 
 private:
 	std::vector<MeshData> m_MeshList;

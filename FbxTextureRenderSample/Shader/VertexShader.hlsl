@@ -28,8 +28,10 @@ cbuffer ConstantBuffer
 	float4x4	View;				// ビュー変換行列
 	float4x4	Projection;			// 透視射影変換行列
 	float4		CameraPos;			// カメラ座標
+
 	float4		LightVector;		// ライト方向
 	float4		LightColor;			// ライトカラー
+
 	float4		MaterialAmbient;	// アンビエント
 	float4		MaterialDiffuse;	// ディフューズ
 	float4		MaterialSpecular;	// スペキュラー
@@ -45,21 +47,12 @@ GS_IN main(VS_IN input)
 	GS_IN output;
 
 	output.pos = mul(input.pos, World);
-	// ワールド座標 * ビュー座標変換行列
 	output.pos = mul(output.pos, View);
-	float4 posView = output.pos;
-	// ビュー座標 * プロジェクション座標変換行列
 	output.pos = mul(output.pos, Projection);
 
 	// シャドウマップ用頂点座標
-
 	float4 pos4 = input.pos;
 
-	// 頂点座標　モデル座標系→透視座標系(シャドウマップ)
-
-
-	
-	//output.pos= mul(input.pos, SMWorldViewProj);
 	pos4.w = 1.0;
 	pos4 = mul(pos4, World);
 	pos4 = mul(pos4, View);
@@ -79,9 +72,6 @@ GS_IN main(VS_IN input)
 	// ワールド座標上での法線の向きに変換する
 	normal = mul(input.nor, World).xyzw;
 	normal = normalize(normal);
-	// saturate => 引数で指定した値を0～1間での範囲に収める
-	// dot => 内積計算
-	//output.color *= saturate(dot(normal, LightVector));
 
 	//ライトの距離も判定
 	float3 light = LightVector - output.pos;
@@ -91,12 +81,10 @@ GS_IN main(VS_IN input)
 	output.color *= bright;
 
 
-
-
 	pos4 = mul(input.pos, SMWorldViewProj);//ライトから見た頂点座標
 
 	pos4.xyz = pos4.xyz / pos4.w;			//正規化
-	output.PosSM.x = (pos4.x + 1.0) / 2.0;	//
+	output.PosSM.x = (pos4.x + 1.0) / 2.0;	
 	output.PosSM.y = (-pos4.y + 1.0) / 2.0;
 	output.PosSM.z = pos4.z;
 

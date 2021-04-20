@@ -106,13 +106,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\include;C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Inc;C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Lib\x64\Static\vs2019;C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\lib\vs2017\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\lib\vs2017\x64\debug;C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Lib\x64\Static\vs2019</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
@@ -150,7 +150,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ohs90011\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\include;C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Inc;C:\Users\ohs90011\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -158,12 +158,13 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\ohs90011\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Lib\x64\Static\vs2017;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\lib\vs2017\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.0.1\lib\vs2017\x64\debug;C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\DirectXTK\Lib\x64\Static\vs2019</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\DirectGraphics.cpp" />
+    <ClCompile Include="Src\DirectX11Lib.cpp" />
     <ClCompile Include="Src\DXTK11Lib.cpp" />
     <ClCompile Include="Src\GameMathLib.cpp" />
     <ClCompile Include="Src\input.cpp" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\DirectGraphics.h" />
+    <ClInclude Include="Src\DirectX11Lib.h" />
     <ClInclude Include="Src\DirectXMath.h" />
     <ClInclude Include="Src\DXTK11Lib.h" />
     <ClInclude Include="Src\GameMathLib.h" />
@@ -183,6 +185,7 @@
     <ClInclude Include="Src\GraphicsUtility.h" />
     <ClInclude Include="Src\FbxMeshFile.h" />
     <ClInclude Include="Src\input.h" />
+    <ClInclude Include="Src\packages\include\DirectXTex.h" />
     <ClInclude Include="Src\PixelShader.h" />
     <ClInclude Include="Src\resource.h" />
     <ClInclude Include="Src\ShaderBase.h" />
@@ -201,6 +204,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="PixelShader_2D.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="PixelSShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -274,5 +283,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtex_desktop_win10.2021.1.10.2\build\native\directxtex_desktop_win10.targets" Condition="Exists('..\packages\directxtex_desktop_win10.2021.1.10.2\build\native\directxtex_desktop_win10.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtex_desktop_win10.2021.1.10.2\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtex_desktop_win10.2021.1.10.2\build\native\directxtex_desktop_win10.targets'))" />
+  </Target>
 </Project>

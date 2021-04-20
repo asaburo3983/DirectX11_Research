@@ -2,12 +2,22 @@
 #include "resource.h"
 const char *Window::ClassName = "DX11PracticeWindow";
 
+char DragDropFileName[512];
 LRESULT CALLBACK Window::WindowProc(HWND window_handle, UINT message_id, WPARAM wparam, LPARAM lparam)
 {
+	HDROP hDrop;
 	switch (message_id)
 	{
+	case WM_CREATE:
+		//DragAcceptFiles(window_handle, TRUE);
+		break;
 	case WM_CLOSE:
 		PostQuitMessage(0);
+		break;
+	case WM_DROPFILES:
+		hDrop = (HDROP)wparam;
+		DragQueryFile(hDrop, 0, DragDropFileName, sizeof(DragDropFileName));
+		DragFinish(hDrop);
 		break;
 	default:
 		return DefWindowProc(window_handle, message_id, wparam, lparam);
@@ -93,4 +103,8 @@ void Window::ResizeWindow(HWND window_handle)
 
 	ShowWindow(window_handle, SW_SHOW);
 	UpdateWindow(window_handle);
+}
+
+void Window::SetDragDropFileName() {
+	dragDropFileName = DragDropFileName;
 }

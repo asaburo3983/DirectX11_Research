@@ -141,18 +141,16 @@ void DirectGraphics::SetLight(Vector3 pos, Vector3 focus, Vector3 up, float _fov
 		DirectX::XMVECTORF32 upDirection = { up.X, up.Y,  up.Z };
 		DirectX::XMFLOAT3	g_vLightPos(pos.X, pos.Y, pos.Z);   // 光源座標(ワールド座標系)
 
-		DirectX::XMMATRIX matShadowMapView = XMMatrixLookAtLH(DirectX::XMLoadFloat3(&g_vLightPos), focusPosition, upDirection);
+		matShadowMapView = XMMatrixLookAtLH(DirectX::XMLoadFloat3(&g_vLightPos), focusPosition, upDirection);
 		XMStoreFloat4x4(&m_ConstantBufferData.View, XMMatrixTranspose(matShadowMapView));
 
 		// 射影変換行列
-		DirectX::XMMATRIX matShadowMapProj = DirectX::XMMatrixPerspectiveFovLH(
+		matShadowMapProj = DirectX::XMMatrixPerspectiveFovLH(
 			DirectX::XMConvertToRadians(_fov),		// 視野角45°
 			g_ViewPortSM[0].Width / g_ViewPortSM[0].Height,	// アスペクト比
 			0.1f,							// 前方投影面までの距離
 			1000.0f);						// 後方投影面までの距離
 		XMStoreFloat4x4(&m_ConstantBufferData.Projection, XMMatrixTranspose(matShadowMapProj));
-
-
 	}
 }
 
@@ -259,7 +257,8 @@ void DirectGraphics::StartRendering()
 				1.0f,										// 深度クリア値
 				0 );										// ステンシルクリア値
 
-	//SetUpContext(nullptr, nullptr, nullptr,nullptr,nullptr,nullptr);
+	SetUpContext(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), nullptr, nullptr, nullptr);
+
 }
 
 void DirectGraphics::FinishRendering()
@@ -719,12 +718,12 @@ bool DirectGraphics::CreateRastrizerSM() {
 	D3D11_RASTERIZER_DESC RSDesc;
 	RSDesc.FillMode = D3D11_FILL_SOLID;   // 普通に描画する
 	RSDesc.CullMode = D3D11_CULL_FRONT;
-	//RSDesc.CullMode = D3D11_CULL_BACK;
+	RSDesc.CullMode = D3D11_CULL_BACK;
 
 	RSDesc.FrontCounterClockwise = FALSE; // 時計回りが表面
-	RSDesc.DepthBias = 0;
+	RSDesc.DepthBias = 1;								//ここと
 	RSDesc.DepthBiasClamp = 0;
-	RSDesc.SlopeScaledDepthBias = 0;
+	RSDesc.SlopeScaledDepthBias = 2;					//ここでシャドウアクネを消す
 	RSDesc.DepthClipEnable = TRUE;
 	RSDesc.ScissorEnable = FALSE;
 	RSDesc.MultisampleEnable = TRUE;
@@ -784,8 +783,8 @@ bool DirectGraphics::CreateTextureSamplerSM() {
 bool DirectGraphics::CreateTexture2DSM() {
 	// シャドウ マップの作成
 	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width = 700*3;   // 幅
-	descDepth.Height = 700*3;  // 高さ
+	descDepth.Width = 512;   // 幅
+	descDepth.Height = 512;  // 高さ
 	descDepth.MipLevels = 1;       // ミップマップ レベル数
 	descDepth.ArraySize = 1;       // 配列サイズ
 	descDepth.Format = DXGI_FORMAT_R32_TYPELESS;  // フォーマット
@@ -834,8 +833,8 @@ bool  DirectGraphics::SetUpViewPortSM() {
 	// ビューポートの設定
 	g_ViewPortSM[0].TopLeftX = 0.0f;		// ビューポート領域の左上X座標。
 	g_ViewPortSM[0].TopLeftY = 0.0f;		// ビューポート領域の左上Y座標。
-	g_ViewPortSM[0].Width = 700*3;	// ビューポート領域の幅
-	g_ViewPortSM[0].Height = 700*3;	// ビューポート領域の高さ
+	g_ViewPortSM[0].Width = 512;	// ビューポート領域の幅
+	g_ViewPortSM[0].Height = 512;	// ビューポート領域の高さ
 	g_ViewPortSM[0].MinDepth = 0.0f;		// ビューポート領域の深度値の最小値
 	g_ViewPortSM[0].MaxDepth = 1.0f;		// ビューポート領域の深度値の最大値
 	return 1;
@@ -861,7 +860,7 @@ void DirectGraphics::SetTextureSM(ID3D11ShaderResourceView* texture) {
 }
 
 
-void DirectGraphics::SetUpContextSM(Vector3 pos, Vector3 scale, Vector3 degree, VertexShader* m_VertexShader, Vector3 lightPos, Vector3 lightFocus, Vector3 lightUp, float lightFov) {
+void DirectGraphics::SetUpContextSM(Vector3 pos, Vector3 scale, Vector3 degree, VertexShader* m_VertexShader) {
 	//深度情報リセット
 	m_Context->ClearDepthStencilView(g_pShadowMapDSView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -888,8 +887,6 @@ void DirectGraphics::SetUpContextSM(Vector3 pos, Vector3 scale, Vector3 degree, 
 	m_Context->OMSetRenderTargets(1, pRender, g_pShadowMapDSView);
 
 
-
-	SetLight( lightPos,  lightFocus,  lightUp, lightFov, Vector3(1, 1, 1), true);
 	
 
 	// コンスタントバッファ更新　map unmap　と同じ、map unmapのほうが早いかも
@@ -908,15 +905,9 @@ void DirectGraphics::SetUpContextSM(Vector3 pos, Vector3 scale, Vector3 degree, 
 	DirectX::XMMATRIX scale_mat = DirectX::XMMatrixScaling(scale.X, scale.Y, scale.Z);
 	DirectX::XMMATRIX matWorld = scale_mat * rotate_x * rotate_y * rotate_z * translate;
 
-	// ビュー変換行列(光源から見る)
-	DirectX::XMVECTORF32 focusPosition = {lightFocus.X,lightFocus.Y ,lightFocus.Z };
-	DirectX::XMVECTORF32 upDirection = { lightUp.X,lightUp.Y ,lightUp.Z };
-	DirectX::XMFLOAT3 g_vLightPos(lightPos.X, lightPos.Y, lightPos.Z);   // 光源座標(ワールド座標系)
-	DirectX::XMMATRIX matShadowMapView = XMMatrixLookAtLH(DirectX::XMLoadFloat3(&g_vLightPos), focusPosition, upDirection);
 
-	// 射影変換行列
-	DirectX::XMMATRIX matShadowMapProj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(
-lightFov),g_ViewPortSM[0].Width / g_ViewPortSM[0].Height,	0.1f,1000.0f);
+
+
 	// シャドウマップの設定
 	DirectX::XMMATRIX mat = DirectX::XMMatrixTranspose(matWorld * matShadowMapView * matShadowMapProj);
 	DirectX::XMStoreFloat4x4(&m_ConstantBufferData.SMWorldViewProj, mat);

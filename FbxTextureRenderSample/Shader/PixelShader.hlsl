@@ -61,7 +61,7 @@ float4 main(PS_IN input) : SV_Target
 	return tex_color*sma; //トゥーンっぽい　影あり
 
 	//マテリアルと光源対応（一番きれい）布の質感とかも出る
-	return (ambient_color + diffuse_color * tex_color*2)*sma;//リアル寄り　ちょいキモイ
+	//return (ambient_color + diffuse_color * tex_color*2)*sma;//リアル寄り　ちょいキモイ
 
 	//光源対応(暗くて汚いので*2している) アニメ調、色がくっきりと出る　質感はない
 	return input.color * tex_color*2;

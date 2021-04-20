@@ -36,6 +36,8 @@
 #include <memory>
 #include <stdexcept>
 
+#include "DirectGraphics.h"
+
 //画像描画追加分
 #ifdef _DEBUG
 	#pragma comment(lib, "DirectXTK_d.lib")
@@ -73,11 +75,21 @@ namespace DXTK11LIB {
 
 	void DrawString(const wchar_t* str = L"未入力です", int x = 320, int y = 240, StrColor _color = StrColor{1,1,1,1}, float size = 1.0f, float angle = 0.0f);
 	void DrawFPS();
+
+	//全体のデフォルトα値をセット
+	void SetDefaultAlpha(float _alpha = 1);
+	//全体の追加の拡大率をセット
+	void SetDefaultImageExtend(float _extend = 1);
+	float GetDefaultImageExtend();
+
+
 	class Image {
 	private:
 		int x = 0;
 		int y = 0;
-		float size = 1.0f;		
+		float sizeX = 1.0f;		
+		float sizeY = 1.0f;
+
 		int width = 0;
 		int height = 0;
 
@@ -85,6 +97,10 @@ namespace DXTK11LIB {
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 		DirectX::SimpleMath::Vector2 textureCenter;
+
+		PixelShader* m_PixelShader;
+	public:
+		struct ConstantBuffer m_ConstantBufferData;
 	public:
 
 		Image() {};//コンストラクタ
@@ -92,8 +108,10 @@ namespace DXTK11LIB {
 
 		void Load(const wchar_t* filePath);//こっちのほうが処理がちょっと早い
 		void Load(const char* filePath);
+		void LoadShader(const char* filePath);
 
-		void Draw(int _x = 0, int _y = 0, float _angle = 0.0f, float _size = 1.0f, float _alpha = -1000.0123f, int _center = 1);//描画のすべて、未入力でもデフォルト値が入る。注意！ 手動でalphaのデフォルト値と同じ値を入れると完全透過ではなくデフォルトの値が入る
+		void Draw(int _x = 0, int _y = 0, float _angle = 0.0f, float _size = 1.0f, float _alpha = -1000.0123f, int _center = 1,bool shader=false);//描画のすべて、未入力でもデフォルト値が入る。注意！ 手動でalphaのデフォルト値と同じ値を入れると完全透過ではなくデフォルトの値が入る
+		void DrawEX(int _x = 0, int _y = 0, float _angle = 0.0f, float _sizeX = 1.0f, float _sizeY = 1.0f, float _alpha = -1000.0123f, int _center = 1, bool LR_TURN = false, bool UD_TURN = false, bool shader = false,RECT drawArea = RECT{-1,-1,-1,-1});
 
 		bool Hit(int _x,int _y);//最後に描画した画像の当たり判定
 
@@ -102,7 +120,8 @@ namespace DXTK11LIB {
 		int GetY() { return y; };
 		int GetWidth() { return width; };
 		int GetHeight() { return height; };
-		float GetSize() { return size; };
+		float GetSizeX() { return sizeX; };
+		float GetSizeY() { return sizeY; };
 		int GetCenter() { return center; };
 	};
 

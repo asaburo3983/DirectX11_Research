@@ -1,7 +1,4 @@
-﻿  Main.cpp
-C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\Src\DXTK11Lib.h(49,10): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
-C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\Src\Main.cpp(46,59): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\ryose\Desktop\FbxTextureRenderSample\FbxTextureRenderSample\Src\Main.cpp(47,59): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+﻿  compilation object save succeeded; see C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\PixelShader_2D.cso
   FbxTextureRenderSample.vcxproj -> C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\FbxTextureRenderSample.exe
   C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\ComputeShader.cso
   C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\GeometryShader.cso

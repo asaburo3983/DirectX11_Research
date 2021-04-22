@@ -23,8 +23,8 @@ float4 main(float4 color : COLOR0, float2 texCoord : TEXCOORD0) : SV_Target0
 
    float4 tex_color = Texture.Sample(TextureSampler, texCoord);
 
-  // float2 noise = (frac(sin(dot(texCoord, float2(12.9898, 78.233) * 2.0)) * 43758.5453));
-   //return abs(noise.x + noise.y) * 0.5;
+  float2 noise = (frac(sin(dot(texCoord, float2(12.9898, 78.233) * 2.0)) * 43758.5453));
+ // return abs(noise.x + noise.y) * 0.5;
 
-   return tex_color * tex_color.a;//* abs(noise.x + noise.y);
+   return tex_color * tex_color.a* abs(noise.x + noise.y);
 }

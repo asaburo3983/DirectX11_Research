@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Shader">
+      <UniqueIdentifier>{db67fee4-7565-431b-bcda-fca02b1ef6c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Do not touch">
+      <UniqueIdentifier>{5c54569b-c70c-4fe4-bae7-c4f9e676fbd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Device">
+      <UniqueIdentifier>{1a5983c8-9179-47b3-a785-78ed7abfb2c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Manager">
+      <UniqueIdentifier>{e2a2143e-017d-433b-912e-143f8984e90d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FBX">
+      <UniqueIdentifier>{27e2cfaa-1009-41ee-84bb-f3c02c6893aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FBX\FbxLoader">
+      <UniqueIdentifier>{25fa5149-b6ec-448a-8af6-e6624dab7cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\2DandSound">
+      <UniqueIdentifier>{c36d2a07-815a-4767-a375-a20c6ec8f43c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Manager\SubManager">
+      <UniqueIdentifier>{ea382948-fb2c-495a-8990-0dfd25e756da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Utility">
+      <UniqueIdentifier>{7ee85199-d866-4c25-8e06-acf050fd6a52}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DirectGraphics.cpp">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Window.cpp">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\WICTextureLoader.cpp">
+      <Filter>ソース ファイル\Do not touch</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FbxMeshFile.cpp">
+      <Filter>ソース ファイル\FBX\FbxLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ShaderBase.cpp">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Utility.cpp">
+      <Filter>ソース ファイル\FBX\FbxLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FbxModel.cpp">
+      <Filter>ソース ファイル\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Resourcemanager.cpp">
+      <Filter>ソース ファイル\Manager\SubManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SceneManager.cpp">
+      <Filter>ソース ファイル\Manager\SubManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DirectX11Lib.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DXTK11Lib.cpp">
+      <Filter>ソース ファイル\2DandSound</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameMathLib.cpp">
+      <Filter>ソース ファイル\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\input.cpp">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CameraAndLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MainManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\DirectGraphics.h">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\GraphicsUtility.h">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Window.h">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\WICTextureLoader.h">
+      <Filter>ソース ファイル\Do not touch</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\resource.h">
+      <Filter>ソース ファイル\Do not touch</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\FbxMeshFile.h">
+      <Filter>ソース ファイル\FBX\FbxLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ShaderBase.h">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Utility.h">
+      <Filter>ソース ファイル\FBX\FbxLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DirectXMath.h">
+      <Filter>ソース ファイル\Do not touch</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\MainManager.h">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\FbxModel.h">
+      <Filter>ソース ファイル\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ResourceManager.h">
+      <Filter>ソース ファイル\Manager\SubManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SceneManager.h">
+      <Filter>ソース ファイル\Manager\SubManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DirectX11Lib.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DXTK11Lib.h">
+      <Filter>ソース ファイル\2DandSound</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\GameMathLib.h">
+      <Filter>ソース ファイル\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\input.h">
+      <Filter>ソース ファイル\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CameraAndLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Src\Shader\GeometryShader.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GeometryShader_CubeMap.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PixelShader.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PixelShader_CubeMap.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PixelShader_Edge.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PixelShader_Enviroment.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PixelShader_TextureView.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\VertexShader.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\VertexShader_Anime.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\VertexShader_CubeMap.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\VertexShader_Edge.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\VertexShader_Enviroment_Surface.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\VertexShader_Enviroment_Vertex.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PixelShader_TextureColor.hlsl">
+      <Filter>ソース ファイル\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Src\resource.rc">
+      <Filter>ソース ファイル\Do not touch</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

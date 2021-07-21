@@ -1,9 +1,0 @@
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\GeometrySVShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\PixelSShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\GeometryShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\PixelShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexSShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexSVShader.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\VertexShader_Live2D.cso
-C:\Users\ryose\Desktop\FbxTextureRenderSample\x64\Debug\PixelShader_2D.cso
